@@ -15,8 +15,8 @@ const FONT_SERIF = '"Instrument Serif", Georgia, serif';
 
 const COPY = {
   pt: {
-    emboss: "APROVADO 2X NA USP",
-    path: "ENG. CIVIL  →  ENG. DE PRODUÇÃO",
+    emboss: "JOAOHENRIQUECOSTA.DEV",
+    path: "E-COMMERCE  ·  OPERAÇÃO  ·  DADOS",
     valid: ["VÁLIDO", "ATÉ"],
     role: "Hub Smart Home · Southbridge",
     sig: "ASSINATURA AUTORIZADA",
@@ -27,8 +27,8 @@ const COPY = {
     ],
   },
   en: {
-    emboss: "ADMITTED 2X TO USP",
-    path: "CIVIL ENG.  →  PRODUCTION ENG.",
+    emboss: "JOAOHENRIQUECOSTA.DEV",
+    path: "E-COMMERCE  ·  OPERATIONS  ·  DATA",
     valid: ["VALID", "THRU"],
     role: "Hub Smart Home · Southbridge",
     sig: "AUTHORISED SIGNATURE",
@@ -184,11 +184,7 @@ function drawFront(t) {
   color.fillStyle = holo; color.fillRect(mm(hx), mm(hy), mm(hw), mm(hh));
   color.strokeStyle = "rgba(255,255,255,.7)"; color.lineWidth = mm(0.12);
   for (let r = 1; r < 14; r++) { color.beginPath(); color.arc(mm(hx + hw * 0.3), mm(hy + hh * 0.55), mm(r * 0.9), 0, Math.PI * 2); color.stroke(); }
-  color.fillStyle = "rgba(40,40,60,.55)";
-  color.font = `italic ${mm(7.4)}px ${FONT_SERIF}`; color.letterSpacing = "0px";
-  color.fillText("2×", mm(hx + hw * 0.5), mm(hy + hh * 0.72));
-  color.font = `600 ${mm(2.1)}px ${FONT_MONO}`; color.letterSpacing = `${mm(0.3)}px`;
-  color.fillText("USP", mm(hx + 1.6), mm(hy + 3.4));
+  monogram(color, hx + hw * 0.47, hy + 1.6, 9, "rgba(40,40,60,.5)", 2.6);
   color.restore();
   roundRectPath(rm, hx, hy, hw, hh, 1.2); rm.fillStyle = "rgb(0,38,255)"; rm.fill();
   roundRectPath(iri, hx, hy, hw, hh, 1.2); iri.fillStyle = "#fff"; iri.fill();
@@ -206,19 +202,15 @@ function drawFront(t) {
 
   emboss(layers, NAME, 7.6, 49.6, 3.5, 0.26);
 
-  // brand mark, bottom right
+  // brand mark, bottom right: "Costa." like the hero
   color.textAlign = "right"; color.letterSpacing = "0px";
-  color.fillStyle = "#1a1813";
-  color.font = `${mm(8.2)}px ${FONT_SERIF}`;
-  color.fillText("USP", mm(MM_W - 6.2), mm(50.2));
   color.fillStyle = "#c23d1c";
-  color.font = `italic ${mm(5.2)}px ${FONT_SERIF}`;
-  const uspW = color.measureText("USP").width;
   color.font = `${mm(8.2)}px ${FONT_SERIF}`;
-  const w2 = color.measureText("USP").width;
-  color.font = `italic ${mm(5.2)}px ${FONT_SERIF}`;
-  color.fillText("2×", mm(MM_W - 6.2) - w2 - mm(1), mm(46.4));
-  void uspW;
+  color.fillText(".", mm(MM_W - 6.2), mm(50.2));
+  const dotW = color.measureText(".").width;
+  color.fillStyle = "#1a1813";
+  color.font = `italic ${mm(8.2)}px ${FONT_SERIF}`;
+  color.fillText("Costa", mm(MM_W - 6.2) - dotW, mm(50.2));
   color.textAlign = "left";
 
   return { color: cColor, rm: cRm, height: cH, iri: cIri };
@@ -258,7 +250,7 @@ function drawBack(t, frontHeight) {
   roundRectPath(color, sx + sw + 2, sy, 13, sh, 0.6); color.fillStyle = "#fbf8f1"; color.fill();
   color.fillStyle = "#1a1813";
   color.font = `italic ${mm(5.4)}px ${FONT_SERIF}`;
-  color.fillText("2×", mm(sx + sw + 4.2), mm(sy + 6.3));
+  color.fillText("001", mm(sx + sw + 2.6), mm(sy + 6.3));
 
   // contact rows
   const rows = [["email", "contato@joaohenriquecosta.dev"], ["linkedin", "/in/joaohenrique-costa"], ["github", "@joaohenriquecosta"], [t.base, "São Carlos, SP — BR"]];
