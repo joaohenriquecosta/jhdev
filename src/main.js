@@ -32,6 +32,7 @@ function setLang(next) {
   $$("[data-i18n-alt]").forEach((el) => { el.alt = dict[el.dataset.i18nAlt] ?? pt[el.dataset.i18nAlt]; });
   root.lang = next === "en" ? "en" : "pt-BR";
   store.set("lang", next);
+  dispatchEvent(new CustomEvent("langchange", { detail: next }));
 }
 const param = new URLSearchParams(location.search).get("lang");
 const initial = param || store.get("lang") || (navigator.language?.toLowerCase().startsWith("pt") ? "pt" : "en");
@@ -91,58 +92,41 @@ const counter = new IntersectionObserver((entries) => {
 }, { threshold: 0.6 });
 $$(".count").forEach((el) => counter.observe(el));
 
-/* ── business card: tilt, foil, flip ────────── */
+/* ── business card ──────────────────────────── */
+// WebGL card (three.js, loaded on demand). CSS card stays as the fallback.
 const card = $(".card");
 const stage = $(".stage");
 const shadow = $(".card__shadow");
-let raf = 0;
-function tilt(x, y) {
-  const r = card.getBoundingClientRect();
-  const px = Math.max(0, Math.min(1, (x - r.left) / r.width));
-  const py = Math.max(0, Math.min(1, (y - r.top) / r.height));
-  cancelAnimationFrame(raf);
-  raf = requestAnimationFrame(() => {
-    card.style.setProperty("--ry", `${(px - 0.5) * 26}deg`);
-    card.style.setProperty("--rx", `${(0.5 - py) * 20}deg`);
-    card.style.setProperty("--px", `${px * 100}%`);
-    card.style.setProperty("--py", `${py * 100}%`);
-    shadow.style.setProperty("--sx", ((px - 0.5) * -40).toFixed(1));
-  });
-}
-function resetTilt() {
-  card.classList.remove("is-tracking");
-  card.style.setProperty("--rx", "0deg");
-  card.style.setProperty("--ry", "0deg");
-  card.style.setProperty("--px", "50%");
-  card.style.setProperty("--py", "50%");
-  shadow.style.setProperty("--sx", "0");
-}
-if (!reduced) {
-  stage.addEventListener("pointermove", (e) => {
-    if (e.pointerType !== "mouse") return;
-    card.classList.add("is-tracking");
-    tilt(e.clientX, e.clientY);
-  });
-  stage.addEventListener("pointerleave", resetTilt);
 
-  // Touch devices: gentle idle sway + device orientation if allowed without a prompt.
-  if (!finePointer) {
-    let t = 0;
-    const sway = () => {
-      t += 0.012;
-      card.style.setProperty("--ry", `${Math.sin(t) * 9}deg`);
-      card.style.setProperty("--rx", `${Math.cos(t * 0.8) * 5}deg`);
-      card.style.setProperty("--px", `${50 + Math.sin(t) * 40}%`);
-      card.style.setProperty("--py", `${50 + Math.cos(t * 0.8) * 30}%`);
-      requestAnimationFrame(sway);
-    };
-    requestAnimationFrame(sway);
-  }
+function cssCardFallback() {
+  let raf = 0;
+  stage.addEventListener("pointermove", (e) => {
+    if (reduced || e.pointerType !== "mouse") return;
+    const r = card.getBoundingClientRect();
+    const px = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
+    const py = Math.max(0, Math.min(1, (e.clientY - r.top) / r.height));
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(() => {
+      card.classList.add("is-tracking");
+      card.style.setProperty("--ry", `${(px - 0.5) * 22}deg`);
+      card.style.setProperty("--rx", `${(0.5 - py) * 16}deg`);
+      card.style.setProperty("--px", `${px * 100}%`);
+      card.style.setProperty("--py", `${py * 100}%`);
+    });
+  });
+  stage.addEventListener("pointerleave", () => {
+    card.classList.remove("is-tracking");
+    ["--rx", "--ry"].forEach((k) => card.style.setProperty(k, "0deg"));
+  });
+  card.addEventListener("click", () => {
+    card.setAttribute("aria-pressed", String(card.getAttribute("aria-pressed") !== "true"));
+  });
 }
-card.addEventListener("click", () => {
-  const flipped = card.getAttribute("aria-pressed") === "true";
-  card.setAttribute("aria-pressed", String(!flipped));
-});
+
+import("./card3d.js")
+  .then(({ mountCard }) => mountCard({ stage, button: card, shadow, getLang: () => lang, reduced }))
+  .then((api) => { if (!api) cssCardFallback(); })
+  .catch((err) => { console.warn("3D card unavailable", err); cssCardFallback(); });
 
 /* ── ambient aura follows pointer ───────────── */
 if (finePointer && !reduced) {
@@ -185,11 +169,15 @@ $(".year").textContent = new Date().getFullYear();
 
 /* ── footer wordmark fills while scrolling ──── */
 const big = $(".foot__big");
+// Fills from the moment the wordmark enters the viewport until the very end of the page.
 const fill = () => {
-  const r = big.getBoundingClientRect();
-  const p = Math.max(0, Math.min(1, (innerHeight - r.top) / (innerHeight * 0.7)));
-  big.style.setProperty("--fill", `${(p * 100).toFixed(1)}%`);
+  const top = big.getBoundingClientRect().top + scrollY;
+  const start = Math.max(0, top - innerHeight);
+  const end = Math.max(start + 1, document.documentElement.scrollHeight - innerHeight);
+  const p = Math.max(0, Math.min(1, (scrollY - start) / (end - start)));
+  big.style.setProperty("--fill", `${(p * 112 - 6).toFixed(1)}%`);
 };
+addEventListener("resize", fill, { passive: true });
 addEventListener("scroll", fill, { passive: true });
 fill();
 
