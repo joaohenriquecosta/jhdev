@@ -520,3 +520,7 @@ main, .foot { position: relative; z-index: 1; }
 :root[data-theme="light"] :is(.field.is-invalid label, .form__status.is-err) { color: #b8361a; }
 :root[data-theme="light"] .form__status.is-ok { color: #1c7a44; }
 .nav__theme { --sbt-size: 36px; color: var(--ink); --sbt-line: var(--line-2); --sbt-focus: var(--accent); }
+:root[data-theme="light"] .nav.is-scrolled { background: rgba(243, 238, 229, .82); }
+/* the photo caption and the card's back stay on their dark fades in both themes */
+:root[data-theme="light"] .portrait figcaption { color: #c9c2b5; }
+:root[data-theme="light"] .card__back { color: #f2ede3; }

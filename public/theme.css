@@ -12,8 +12,8 @@
 .sbt-toggle svg { display: block; overflow: visible; }
 .sbt-toggle .sbt-sun, .sbt-toggle .sbt-moon { transform-origin: 12px 12px; transition: transform .45s cubic-bezier(.2,.7,.2,1), opacity .3s; }
 .sbt-toggle .sbt-moon { opacity: 0; transform: rotate(-70deg) scale(.5); }
-:root:is([data-theme="dark"], [data-scheme="dark"]) .sbt-toggle .sbt-sun { opacity: 0; transform: rotate(90deg) scale(.5); }
-:root:is([data-theme="dark"], [data-scheme="dark"]) .sbt-toggle .sbt-moon { opacity: 1; transform: none; }
+.sbt-toggle[aria-pressed="true"] .sbt-sun { opacity: 0; transform: rotate(90deg) scale(.5); }
+.sbt-toggle[aria-pressed="true"] .sbt-moon { opacity: 1; transform: none; }
 /* floating variant for pages without a nav slot */
 .sbt-float { position: fixed; z-index: 60; right: 16px; bottom: 16px; background: var(--sbt-bg, Canvas); color: var(--sbt-fg, CanvasText);
   box-shadow: 0 8px 24px -10px rgba(0,0,0,.35); }

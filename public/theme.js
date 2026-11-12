@@ -9,7 +9,7 @@
    Options on the <script> tag: data-key (localStorage key), data-light / data-dark (theme-color values),
    data-attr (attribute on <html>, default data-theme; use another one when the site already uses data-theme),
    data-lock (selector on <html> meaning "the page sets the theme itself", e.g. a lab mode: the kit then leaves it alone).
-   CSS: write the dark palette under :root[data-theme="dark"]. Without JS the page stays light. */
+   CSS: write the dark palette under :root[data-theme="dark"]. Without JS the page shows its default theme. */
 (function () {
   var s = document.currentScript, root = document.documentElement, d = (s && s.dataset) || {};
   var KEY = d.key || 'theme', ATTR = d.attr || 'data-theme';
