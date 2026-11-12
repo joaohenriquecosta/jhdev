@@ -1,8 +1,7 @@
 /* Southbridge theme kit — toggle button + theme switch animation. Pair with theme.js.
    Tune per site: --sbt-size, --sbt-fg, --sbt-bg, --sbt-line, --sbt-focus. */
 .sbt-toggle {
-  --sbt-size: 40px;
-  display: inline-grid; place-items: center; flex: none; width: var(--sbt-size); height: var(--sbt-size); padding: 0; margin: 0;
+  display: inline-grid; place-items: center; flex: none; width: var(--sbt-size, 40px); height: var(--sbt-size, 40px); padding: 0; margin: 0;
   border-radius: 999px; border: 1px solid var(--sbt-line, color-mix(in srgb, currentColor 22%, transparent));
   background: var(--sbt-bg, transparent); color: var(--sbt-fg, inherit); cursor: pointer; -webkit-tap-highlight-color: transparent;
   transition: background-color .2s, border-color .2s, transform .15s;
