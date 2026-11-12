@@ -499,3 +499,24 @@ main, .foot { position: relative; z-index: 1; }
   .grain { animation: none; }
   .js .reveal { opacity: 1; transform: none; }
 }
+
+/* ---------- Light theme (public/theme.js sets data-theme; dark stays the default without JS) ----------
+   Warm paper instead of night, the same ink family, accent darkened for contrast on light. */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f3eee5;
+  --bg-2: #e9e2d5;
+  --ink: #1a1813;
+  --ink-2: #3f3a31;
+  --muted: #6b6559;
+  --line: rgba(26, 24, 19, 0.12);
+  --line-2: rgba(26, 24, 19, 0.22);
+  --accent: #d9431d;
+  --accent-ink: #ffffff;
+  --brass: #8a6d2c;
+}
+:root[data-theme="light"] :is(.portrait, .project__shot) { background: #e2d9c8; }
+:root[data-theme="light"] .field.is-invalid input, :root[data-theme="light"] .field.is-invalid textarea { border-bottom-color: #b8361a; }
+:root[data-theme="light"] :is(.field.is-invalid label, .form__status.is-err) { color: #b8361a; }
+:root[data-theme="light"] .form__status.is-ok { color: #1c7a44; }
+.nav__theme { --sbt-size: 36px; color: var(--ink); --sbt-line: var(--line-2); --sbt-focus: var(--accent); }

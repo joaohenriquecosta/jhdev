@@ -1,0 +1,24 @@
+/* Southbridge theme kit — toggle button + theme switch animation. Pair with theme.js.
+   Tune per site: --sbt-size, --sbt-fg, --sbt-bg, --sbt-line, --sbt-focus. */
+.sbt-toggle {
+  --sbt-size: 40px;
+  display: inline-grid; place-items: center; flex: none; width: var(--sbt-size); height: var(--sbt-size); padding: 0; margin: 0;
+  border-radius: 999px; border: 1px solid var(--sbt-line, color-mix(in srgb, currentColor 22%, transparent));
+  background: var(--sbt-bg, transparent); color: var(--sbt-fg, inherit); cursor: pointer; -webkit-tap-highlight-color: transparent;
+  transition: background-color .2s, border-color .2s, transform .15s;
+}
+.sbt-toggle:hover { border-color: color-mix(in srgb, currentColor 45%, transparent); }
+.sbt-toggle:active { transform: scale(.94); }
+.sbt-toggle:focus-visible { outline: 2px solid var(--sbt-focus, currentColor); outline-offset: 3px; }
+.sbt-toggle svg { display: block; overflow: visible; }
+.sbt-toggle .sbt-sun, .sbt-toggle .sbt-moon { transform-origin: 12px 12px; transition: transform .45s cubic-bezier(.2,.7,.2,1), opacity .3s; }
+.sbt-toggle .sbt-moon { opacity: 0; transform: rotate(-70deg) scale(.5); }
+:root:is([data-theme="dark"], [data-scheme="dark"]) .sbt-toggle .sbt-sun { opacity: 0; transform: rotate(90deg) scale(.5); }
+:root:is([data-theme="dark"], [data-scheme="dark"]) .sbt-toggle .sbt-moon { opacity: 1; transform: none; }
+/* floating variant for pages without a nav slot */
+.sbt-float { position: fixed; z-index: 60; right: 16px; bottom: 16px; background: var(--sbt-bg, Canvas); color: var(--sbt-fg, CanvasText);
+  box-shadow: 0 8px 24px -10px rgba(0,0,0,.35); }
+.sbt-switching, .sbt-switching *, .sbt-switching *::before, .sbt-switching *::after { transition: none !important; }
+.sbt-vt::view-transition-old(root), .sbt-vt::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+@media (prefers-reduced-motion: reduce) { .sbt-toggle .sbt-sun, .sbt-toggle .sbt-moon { transition: none; } }
+@media print { .sbt-toggle { display: none !important; } }
