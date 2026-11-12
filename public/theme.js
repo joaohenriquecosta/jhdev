@@ -7,7 +7,8 @@
    - follows the device live while there is no override, syncs other tabs, circular reveal
      (View Transitions) unless reduced motion.
    Options on the <script> tag: data-key (localStorage key), data-light / data-dark (theme-color values),
-   data-attr (attribute on <html>, default data-theme; use another one when the site already uses data-theme).
+   data-attr (attribute on <html>, default data-theme; use another one when the site already uses data-theme),
+   data-lock (selector on <html> meaning "the page sets the theme itself", e.g. a lab mode: the kit then leaves it alone).
    CSS: write the dark palette under :root[data-theme="dark"]. Without JS the page stays light. */
 (function () {
   var s = document.currentScript, root = document.documentElement, d = (s && s.dataset) || {};
@@ -26,7 +27,7 @@
   if (!T) T = ['Dark theme', 'Switch to dark theme', 'Switch to light theme', 'Back to dark (your device setting)', 'Back to light (your device setting)'];
 
   function sync() {   // buttons and browser bar follow whatever theme the page shows (a site's lab mode may set it too)
-    var t = root.getAttribute(ATTR) === 'dark' ? 'dark' : 'light';
+    var a = root.getAttribute(ATTR), t = a === 'dark' || a === 'light' ? a : device();
     var m = document.querySelectorAll('meta[name="theme-color"]');
     if (d.light && d.dark) for (var i = 0; i < m.length; i++) { m[i].removeAttribute('media'); m[i].setAttribute('content', t === 'dark' ? d.dark : d.light); }
     var b = document.querySelectorAll('[data-theme-toggle]');
@@ -36,7 +37,9 @@
       b[j].setAttribute('title', next === device() ? (next === 'dark' ? T[3] : T[4]) : (next === 'dark' ? T[1] : T[2]));
     }
   }
-  function paint(t) { root.setAttribute(ATTR, t); sync(); }
+  var painted = null;   // what the kit last painted; if the page changed it since (a lab mode), the kit leaves it alone
+  function paint(t) { root.setAttribute(ATTR, t); painted = t; sync(); }
+  var ours = function () { return !(d.lock && root.matches(d.lock)) && root.getAttribute(ATTR) === painted; };
   paint(current());
 
   var ICON = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' +
@@ -69,7 +72,7 @@
       if (!el.getAttribute('aria-label')) el.setAttribute('aria-label', T[0]);
       el.classList.add('sbt-toggle');
       el.addEventListener('click', function (e) {
-        var shown = root.getAttribute(ATTR) === 'dark' ? 'dark' : 'light', next = shown === 'dark' ? 'light' : 'dark';
+        var a = root.getAttribute(ATTR), shown = a === 'dark' || a === 'light' ? a : device(), next = shown === 'dark' ? 'light' : 'dark';
         set(next === device() ? null : next);           // landing on the device theme forgets the override
         change(next, e.currentTarget);
       });
@@ -77,8 +80,8 @@
     sync();
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bind); else bind();
-  var follow = function () { if (!get()) change(device()); };
+  var follow = function () { if (!get() && ours()) change(device()); else sync(); };
   mq.addEventListener ? mq.addEventListener('change', follow) : mq.addListener && mq.addListener(follow);
-  addEventListener('storage', function (e) { if (e.key === KEY) change(current()); });
+  addEventListener('storage', function (e) { if (e.key !== KEY) return; if (ours()) change(current()); else sync(); });
   window.sbTheme = { get: current, set: function (v) { set(v === 'system' ? null : v); change(current()); }, bind: bind };
 })();
