@@ -50,7 +50,7 @@
     <!-- HERO ─────────────────────────────────────────── -->
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero__copy">
-        <p class="eyebrow reveal"><span class="mono">Nº 001</span> <span data-i18n="hero.eyebrow">Cartão de visitas</span></p>
+        <p class="eyebrow reveal"><span class="mono">Nº 001</span> <span data-i18n="hero.eyebrow">Escritório aberto</span></p>
         <h1 id="hero-title" class="hero__name">
           <span class="line"><span>João Henrique</span></span>
           <span class="line"><span><em>Costa</em><span class="dot">.</span></span></span>
@@ -62,38 +62,28 @@
         </div>
       </div>
 
-      <div class="stage" aria-label="Cartão de visitas interativo">
-        <button class="card" type="button" aria-pressed="false" data-i18n-aria="card.aria" aria-label="Virar o cartão">
-          <span class="card__inner">
-            <span class="card__face card__front">
-              <span class="card__foil" aria-hidden="true"></span>
-              <span class="card__top">
-                <svg class="card__mono" viewBox="0 0 40 40" aria-hidden="true"><use href="#monogram" /></svg>
-                <span class="mono card__no">JHC — 2026</span>
-              </span>
-              <span class="card__mid">
-                <span class="card__name">João Henrique<br /><em>Santos Costa</em></span>
-                <span class="card__role" data-i18n="card.role">Founder · Hub Smart Home</span>
-              </span>
-              <span class="card__bottom mono">
-                <span data-i18n="card.tags">E-commerce · Operação · Dados</span>
-                <span class="card__hint" data-i18n="card.hint">toque para virar ↻</span>
+      <div class="stage">
+        <button class="laptop" type="button" aria-pressed="false" aria-label="Fechar o notebook">
+          <span class="laptop__lid">
+            <span class="laptop__screen">
+              <span class="laptop__cam" aria-hidden="true"></span>
+              <span class="laptop__display" aria-hidden="true">
+                <span class="term__bar"><i></i><i></i><i></i><span class="mono">~/joaohenriquecosta.dev</span></span>
+                <span class="term"></span>
               </span>
             </span>
-            <span class="card__face card__back">
-              <span class="card__foil" aria-hidden="true"></span>
-              <span class="card__rows mono">
-                <span><small>email</small>contato@joaohenriquecosta.dev</span>
-                <span><small>linkedin</small>/in/joaohenrique-costa</span>
-                <span><small>github</small>@joaohenriquecosta</span>
-                <span><small data-i18n="card.base">base</small>São Carlos, SP — BR</span>
-              </span>
-              <span class="card__chip" aria-hidden="true"></span>
+            <span class="laptop__cover" aria-hidden="true">
+              <svg viewBox="0 0 40 40"><use href="#monogram" /></svg>
             </span>
           </span>
+          <span class="laptop__base" aria-hidden="true">
+            <span class="laptop__keys"></span>
+            <span class="laptop__pad"></span>
+            <span class="laptop__lip"></span>
+          </span>
         </button>
-        <div class="card__shadow" aria-hidden="true"></div>
-        <p class="stage__hint mono" data-i18n="card.drag">arraste para girar · <span class="t-click">clique</span><span class="t-tap">toque</span> para virar</p>
+        <div class="laptop__shadow" aria-hidden="true"></div>
+        <p class="stage__hint mono" data-i18n="laptop.hint"><span class="t-click">digite algo · clique para abrir e fechar</span><span class="t-tap">toque para abrir e fechar</span></p>
       </div>
 
       <div class="hero__meta mono reveal">

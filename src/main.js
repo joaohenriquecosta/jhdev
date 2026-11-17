@@ -1,5 +1,6 @@
 import "./styles.css";
 import { en, ui } from "./i18n.js";
+import { mountLaptop } from "./laptop.js";
 
 const root = document.documentElement;
 root.classList.add("js");
@@ -92,41 +93,8 @@ const counter = new IntersectionObserver((entries) => {
 }, { threshold: 0.6 });
 $$(".count").forEach((el) => counter.observe(el));
 
-/* ── business card ──────────────────────────── */
-// WebGL card (three.js, loaded on demand). CSS card stays as the fallback.
-const card = $(".card");
-const stage = $(".stage");
-const shadow = $(".card__shadow");
-
-function cssCardFallback() {
-  let raf = 0;
-  stage.addEventListener("pointermove", (e) => {
-    if (reduced || e.pointerType !== "mouse") return;
-    const r = card.getBoundingClientRect();
-    const px = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
-    const py = Math.max(0, Math.min(1, (e.clientY - r.top) / r.height));
-    cancelAnimationFrame(raf);
-    raf = requestAnimationFrame(() => {
-      card.classList.add("is-tracking");
-      card.style.setProperty("--ry", `${(px - 0.5) * 22}deg`);
-      card.style.setProperty("--rx", `${(0.5 - py) * 16}deg`);
-      card.style.setProperty("--px", `${px * 100}%`);
-      card.style.setProperty("--py", `${py * 100}%`);
-    });
-  });
-  stage.addEventListener("pointerleave", () => {
-    card.classList.remove("is-tracking");
-    ["--rx", "--ry"].forEach((k) => card.style.setProperty(k, "0deg"));
-  });
-  card.addEventListener("click", () => {
-    card.setAttribute("aria-pressed", String(card.getAttribute("aria-pressed") !== "true"));
-  });
-}
-
-import("./card3d.js")
-  .then(({ mountCard }) => mountCard({ stage, button: card, shadow, getLang: () => lang, reduced }))
-  .then((api) => { if (!api) cssCardFallback(); })
-  .catch((err) => { console.warn("3D card unavailable", err); cssCardFallback(); });
+/* ── hero laptop ────────────────────────────── */
+mountLaptop({ stage: $(".stage"), getLang: () => lang, reduced });
 
 /* ── ambient aura follows pointer ───────────── */
 if (finePointer && !reduced) {
